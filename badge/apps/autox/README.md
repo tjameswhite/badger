@@ -2,6 +2,8 @@
 
 Measure cornering, braking and acceleration forces and log your autocross runs.
 
+![AutoX live screen showing the g-ball, lateral and longitudinal g, and peaks](screenshot.png)
+
 ## Usage
 
 Mount the badge firmly in the car at any angle, for example in a phone mount. It must not swing on a lanyard. On first launch the app calibrates in two steps:
