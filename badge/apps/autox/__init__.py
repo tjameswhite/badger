@@ -41,8 +41,9 @@ PX_PER_G = RADIUS / MAX_G
 TRAIL_LEN = 48
 PANEL_X = 232
 
+# measure_text returns floats; keep LINE an int so it can be used in slices.
 _, LINE = screen.measure_text("Ag")
-LINE += 2
+LINE = int(LINE) + 2
 
 CAL_LEVEL = "cal_level"
 CAL_FWD = "cal_fwd"
