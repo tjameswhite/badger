@@ -2,6 +2,8 @@
 
 Measure cornering, braking and acceleration forces and log your autocross runs.
 
+![AutoX live screen showing the g-ball, lateral and longitudinal g, and peaks](screenshot.png)
+
 ## Usage
 
 Mount the badge firmly in the car at any angle, for example in a phone mount. It must not swing on a lanyard. On first launch the app calibrates in two steps:
@@ -38,4 +40,5 @@ Each CSV has the columns `t_s, lat_g, long_g, ax_g, ay_g, az_g`. `lat_g` is posi
 - The sensor's range is ±2 g, which covers normal autocross loads (about 1–1.5 g).
 - Samples are taken once per frame, about 44 per second while on the live screen.
 - There is no GPS, so the app shows forces only, not speed, position or lap times.
+- The screen runs at full brightness while the app is open, for reading in a car. Your brightness from Settings comes back when you leave the app.
 - No Wi-Fi or `secrets.py` settings are needed.
