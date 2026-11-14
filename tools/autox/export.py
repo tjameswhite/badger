@@ -15,6 +15,7 @@ import ast
 import csv
 import json
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -48,8 +49,41 @@ def find_port(mp):
     return ports[0]
 
 
+PORT_PATTERN = re.compile(r"^(/dev/[A-Za-z0-9._-]+|COM[0-9]+)$")
+RUN_NAME_PATTERN = re.compile(r"^%s[0-9]{4,}%s$" % (re.escape(runlog.PREFIX), re.escape(runlog.KEPT)))
+
+
+def safe_port(port):
+    """Only accept real serial device names, never something mpremote could read as an option."""
+    if not PORT_PATTERN.match(port):
+        sys.exit("Invalid serial port: %r" % port)
+    return port
+
+
+def safe_run_names(names):
+    """Keep only file names the app itself writes (run-0001.axr); they come from the badge."""
+    return sorted(n for n in names if isinstance(n, str) and RUN_NAME_PATTERN.match(n))
+
+
+def safe_out_dir(path):
+    """Resolve the output folder and keep it inside the current directory."""
+    base = os.path.realpath(os.getcwd())
+    out = os.path.realpath(os.path.join(base, path))
+    if os.path.commonpath([base, out]) != base:
+        sys.exit("Output folder must be inside the current directory: %s" % path)
+    return out
+
+
+def safe_input_file(path):
+    """Resolve a local run file to convert; it must be an existing .axr file."""
+    resolved = os.path.realpath(path)
+    if not resolved.endswith(runlog.KEPT) or not os.path.isfile(resolved):
+        sys.exit("Not an .axr run file: %s" % path)
+    return resolved
+
+
 def remote(mp, port, *args):
-    return subprocess.run(mp + ["connect", port] + list(args), capture_output=True, text=True)
+    return subprocess.run(mp + ["connect", safe_port(port)] + list(args), capture_output=True, text=True)
 
 
 def convert(data, path_out):
@@ -75,23 +109,25 @@ def main():
     args = parser.parse_args()
 
     if args.convert:
-        out = os.path.splitext(args.convert)[0] + ".csv"
-        with open(args.convert, "rb") as f:
+        source = safe_input_file(args.convert)
+        out = source[:-len(runlog.KEPT)] + ".csv"
+        with open(source, "rb") as f:
             n = convert(f.read(), out)
-        print("%s: %d samples -> %s" % (args.convert, n, out))
+        print("%s: %d samples -> %s" % (source, n, out))
         return
 
+    out_dir = safe_out_dir(args.out)
     mp = find_mpremote()
-    port = args.port or find_port(mp)
+    port = safe_port(args.port) if args.port else find_port(mp)
     listing = remote(mp, port, "exec", "import os\ntry:\n print(os.listdir('%s'))\nexcept OSError:\n print([])" % runlog.RUN_DIR)
     if listing.returncode:
         sys.exit(listing.stderr.strip() or "could not read the badge")
-    names = sorted(n for n in ast.literal_eval(listing.stdout.strip().splitlines()[-1]) if n.endswith(runlog.KEPT))
+    names = safe_run_names(ast.literal_eval(listing.stdout.strip().splitlines()[-1]))
     if not names:
         print("No saved runs on the badge.")
         return
 
-    os.makedirs(args.out, exist_ok=True)
+    os.makedirs(out_dir, exist_ok=True)
     summaries = {}
     index = remote(mp, port, "fs", "cat", ":" + runlog.INDEX)
     if index.returncode == 0:
@@ -110,8 +146,8 @@ def main():
                 continue
             with open(local, "rb") as f:
                 data = f.read()
-            shutil.copy(local, os.path.join(args.out, name))
-            csv_path = os.path.join(args.out, name[:-len(runlog.KEPT)] + ".csv")
+            shutil.copy(local, os.path.join(out_dir, name))
+            csv_path = os.path.join(out_dir, name[:-len(runlog.KEPT)] + ".csv")
             n = convert(data, csv_path)
             info = summaries.get(str(runlog.run_number(name)), {})
             peak = " max %.2f g" % info["t"] if "t" in info else ""
@@ -125,7 +161,7 @@ def main():
         if not left:
             remote(mp, port, "fs", "rm", ":" + runlog.INDEX)
         print("Deleted %d run(s) from the badge." % len(copied))
-    print("Done: %d run(s) in %s/" % (len(copied), args.out))
+    print("Done: %d run(s) in %s" % (len(copied), out_dir))
 
 
 if __name__ == "__main__":

@@ -127,5 +127,30 @@ class LogFormatTests(unittest.TestCase):
             runlog.decode(b"nope" + bytes(40))
 
 
+class ExportSafetyTests(unittest.TestCase):
+    def setUp(self):
+        sys.path.insert(0, HERE)
+        import export
+        self.export = export
+
+    def test_run_names_from_badge_are_filtered(self):
+        names = ["run-0001.axr", "../../evil.axr", "..run-0002.axr", "run-12.axr",
+                 "run-0003.axr.part", 5, "run-0004.axr"]
+        self.assertEqual(self.export.safe_run_names(names), ["run-0001.axr", "run-0004.axr"])
+
+    def test_port_must_be_a_device(self):
+        self.assertEqual(self.export.safe_port("/dev/cu.usbmodem101"), "/dev/cu.usbmodem101")
+        self.assertEqual(self.export.safe_port("COM3"), "COM3")
+        for bad in ("-x", "--help", "/dev/../etc"):
+            with self.assertRaises(SystemExit):
+                self.export.safe_port(bad)
+
+    def test_out_dir_stays_inside_cwd(self):
+        self.assertTrue(self.export.safe_out_dir("autox-runs").startswith(os.path.realpath(os.getcwd())))
+        for bad in ("../evil", "/tmp/x"):
+            with self.assertRaises(SystemExit):
+                self.export.safe_out_dir(bad)
+
+
 if __name__ == "__main__":
     unittest.main()
