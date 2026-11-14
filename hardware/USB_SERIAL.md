@@ -256,9 +256,16 @@ On macOS, for example:
 
 ```bash
 BADGE_VOLUME="/Volumes/BADGER"
-cp -R badge/apps/my_app "$BADGE_VOLUME/apps/"
+cp -RX badge/apps/my_app "$BADGE_VOLUME/apps/"
+dot_clean -m "$BADGE_VOLUME"
 diskutil eject "$BADGE_VOLUME"
 ```
+
+On the FAT-formatted `BADGER` volume, macOS stores file metadata in hidden
+`._` files (for example `apps/my_app/._icon.png`). `cp -X` skips extended
+attributes and `dot_clean -m` removes any `._` files that remain. Leftover
+`._` files are harmless, but `/system` is read-only in normal runtime, so they
+can only be removed in mass-storage mode.
 
 After the badge returns to serial mode, verify the remote directory:
 
@@ -293,7 +300,7 @@ session as the app. Copy only `app.py`; the rest of the menu (compiled
 modules, animations, awards and photos) already matches the firmware:
 
 ```bash
-cp badge/apps/menu/app.py "$BADGE_VOLUME/apps/menu/app.py"
+cp -X badge/apps/menu/app.py "$BADGE_VOLUME/apps/menu/app.py"
 ```
 
 ## Running code without installing it

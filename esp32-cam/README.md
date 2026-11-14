@@ -282,14 +282,15 @@ does not need new firmware. Use the existing virtual environment when available;
    (
    set -e
    mkdir -p /Volumes/BADGER/apps/camera/assets
-   cp badge/apps/camera/{__init__.py,camera_core.py,camera_ble.py,camera_pairing.py,icon.png} \
+   cp -X badge/apps/camera/{__init__.py,camera_core.py,camera_ble.py,camera_pairing.py,icon.png} \
      /Volumes/BADGER/apps/camera/
-   cp badge/apps/camera/assets/{camera-wireless.png,mona.png} \
+   cp -X badge/apps/camera/assets/{camera-wireless.png,mona.png} \
      /Volumes/BADGER/apps/camera/assets/
    for name in __init__.py camera_core.py camera_ble.py camera_pairing.py icon.png \
      assets/camera-wireless.png assets/mona.png; do
      cmp "badge/apps/camera/$name" "/Volumes/BADGER/apps/camera/$name"
    done
+   dot_clean -m /Volumes/BADGER
    sync
    diskutil eject /Volumes/BADGER
    )
