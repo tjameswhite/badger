@@ -38,4 +38,5 @@ Each CSV has the columns `t_s, lat_g, long_g, ax_g, ay_g, az_g`. `lat_g` is posi
 - The sensor's range is ±2 g, which covers normal autocross loads (about 1–1.5 g).
 - Samples are taken once per frame, about 44 per second while on the live screen.
 - There is no GPS, so the app shows forces only, not speed, position or lap times.
+- The screen runs at full brightness while the app is open, for reading in a car. Your brightness from Settings comes back when you leave the app.
 - No Wi-Fi or `secrets.py` settings are needed.

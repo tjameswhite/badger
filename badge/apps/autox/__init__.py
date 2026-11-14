@@ -8,7 +8,7 @@ sys.path.insert(0, APP_DIR)
 
 import math
 
-from badgeware import State
+from badgeware import State, set_backlight
 
 import runlog
 import vehicle
@@ -17,10 +17,15 @@ badge.mode(HIRES | VSYNC)
 screen.font = font.sins
 screen.antialias = image.X2
 
-BG = color.rgb(14, 17, 22)
-RING = color.rgb(52, 60, 72)
-AXIS = color.rgb(34, 40, 50)
-LABEL = color.rgb(130, 140, 155)
+# Full brightness for reading in a car. Not saved: leaving the app resets the
+# badge, which restores the brightness chosen in Settings.
+set_backlight(100, save=False)
+
+# High contrast colours for daylight readability.
+BG = color.rgb(0, 0, 0)
+RING = color.rgb(90, 100, 115)
+AXIS = color.rgb(60, 68, 80)
+LABEL = color.rgb(190, 198, 210)
 VALUE = color.rgb(235, 240, 245)
 BALL = color.rgb(64, 220, 120)
 TRAIL = color.rgb(30, 90, 56)
