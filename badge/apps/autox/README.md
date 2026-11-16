@@ -13,7 +13,7 @@ Mount the badge firmly in the car at any angle, for example in a phone mount. It
 
 Calibration is saved, so you only repeat it after moving the badge. Press **MENU** to recalibrate.
 
-On the live screen the green ball shows the car's acceleration: up is accelerating, down is braking, and left or right is turning. The rings mark 0.5, 1.0 and 1.5 g. The panel shows live lateral and longitudinal g and the peaks in each direction.
+On the live screen the green ball shows the force you feel, like a ball rolling in a bowl: it moves down when accelerating, up when braking, right in a left turn and left in a right turn. The rings mark 0.5, 1.0 and 1.5 g. The panel shows live lateral and longitudinal g and the peaks in each direction.
 
 | Control | Action |
 | --- | --- |

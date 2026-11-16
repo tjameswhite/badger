@@ -150,9 +150,10 @@ def text_center(text, x, y):
 
 
 def to_screen(lat, lon):
-    # car acceleration: accelerating = up, braking = down,
-    # turning right = right, turning left = left
-    return CX - lat * PX_PER_G, CY - lon * PX_PER_G
+    # The dot shows the force you feel, like a ball in a bowl:
+    # accelerating = down, braking = up,
+    # turning left = right, turning right = left
+    return CX + lat * PX_PER_G, CY + lon * PX_PER_G
 
 
 # Build the ring shapes once; drawing them without antialiasing is ~5x faster
@@ -172,8 +173,8 @@ def draw_dial():
     screen.font = SMALL
     screen.pen = LABEL
     screen.text("1g", CX + PX_PER_G + 3, CY + 2)
-    text_center("ACCEL", CX, CY - RADIUS - SMALL_H - 4)
-    text_center("BRAKE", CX, CY + RADIUS + 4)
+    text_center("BRAKE", CX, CY - RADIUS - SMALL_H - 4)
+    text_center("ACCEL", CX, CY + RADIUS + 4)
 
 
 def draw_ball(value):
