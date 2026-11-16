@@ -2,8 +2,7 @@
 
 This guidance applies only to the archived Universe 2025 sources under
 `badge25/`. New development belongs in `badge/` and must follow
-[`badge/AGENTS.md`](../badge/AGENTS.md). Paths written as `/badge/apps/` in
-older examples correspond to `/badge25/apps/` in this repository.
+[`badge/AGENTS.md`](../badge/AGENTS.md).
 
 This document provides context for maintaining applications for the GitHub
 Universe 2025 Tufty badge. Its Badgeware imports, physical buttons, display
@@ -595,13 +594,13 @@ def update():
 
 Study these apps for working examples:
 
-- **`/badge/apps/snake/`** - Classic Snake game with score tracking
-- **`/badge/apps/life/`** - Conway's Game of Life with pattern injection
-- **`/badge/apps/flappy/`** - Flappy Bird clone with sprite animation
-- **`/badge/apps/monapet/`** - Virtual pet with state management
-- **`/badge/apps/sketch/`** - Drawing app with button controls
-- **`/badge/apps/quest/`** - IR beacon hunting game
-- **`/badge/apps/menu/`** - Launcher menu with icon grid
+- **`badge25/apps/snake/`** - Classic Snake game with score tracking
+- **`badge25/apps/life/`** - Conway's Game of Life with pattern injection
+- **`badge25/apps/flappy/`** - Flappy Bird clone with sprite animation
+- **`badge25/apps/monapet/`** - Virtual pet with state management
+- **`badge25/apps/sketch/`** - Drawing app with button controls
+- **`badge25/apps/quest/`** - IR beacon hunting game
+- **`badge25/apps/menu/`** - Launcher menu with icon grid
 
 ## Additional Resources
 

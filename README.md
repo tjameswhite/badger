@@ -22,9 +22,85 @@ They do not model the 2026 graphics and input APIs.
 
 ## Examples
 
-The [Apps](./badge/apps/) is folder contains all the applications that ship on the badge along
+The [apps](./badge/apps/) folder contains all the applications that ship on the badge along
 with others from the stock Pimoroni Tufty 2350 badge the GitHub Universe badge is based on. It 
 also contains a number of community submitted applications for you to experiment with.
+
+### Universe 2026 apps (`badge/apps/`)
+
+Each app folder has a `README.md` with usage and requirements.
+
+| App | Summary |
+| --- | --- |
+| [30 Minutes to Alpha Centauri](./badge/apps/30_minutes_to_alpha_centauri/) | Pilot a cargo ship through obstacles to complete a space delivery. |
+| [AutoX](./badge/apps/autox/) | Measure cornering, braking and acceleration forces and log autocross runs. |
+| [Badge](./badge/apps/badge/) | Display your GitHub profile and contribution graph (Wi-Fi). |
+| [Bee Amazed](./badge/apps/bee_amazed/) | Guide a bee through mazes that get harder each level. |
+| [Brattal](./badge/apps/brattal/) | A two-lane arcade shooter. |
+| [Camera](./badge/apps/camera/) | Live viewfinder and shutter for a Wi-Fi ESP32-CAM, with photo review. |
+| [Clock](./badge/apps/clock/) | Show the time in selectable styles and time zones (Wi-Fi/NTP). |
+| [Commits](./badge/apps/commits/) | Break GitHub-colored bricks with a paddle. |
+| [Contacts](./badge/apps/contacts/) | Exchange contact cards with nearby badges over the badge link. |
+| [Copilot](./badge/apps/Copilot/) | Monitor GitHub Copilot coding sessions with an animated Agent Buddy. |
+| [Demos](./badge/apps/demos/) | Graphics demos of shapes, text, sprites and display effects. |
+| [Extend-a-Squirrel](./badge/apps/extend_a_squirrel/) | Snake-style game with a growing squirrel. |
+| [Flappy Mona](./badge/apps/flappy_mona/) | Flap Mona through the gaps; best score is saved. |
+| [Gallery](./badge/apps/gallery/) | Browse images with a thumbnail carousel. |
+| [Ghost Signal](./badge/apps/ghost_signal/) | Match a moving wave pattern as accurately as possible. |
+| [Hydrate](./badge/apps/hydrate/) | Track water intake against a daily goal. |
+| [Input Test](./badge/apps/input_test/) | Test touch controls, buttons and motion input. |
+| [ISS](./badge/apps/iss/) | Track the International Space Station on a live world map (Wi-Fi). |
+| [Life](./badge/apps/life/) | Conway's Game of Life. |
+| [Mass Storage](./badge/apps/mass_storage/) | Restart the badge as a USB drive to manage its files. |
+| [Menu](./badge/apps/menu/) | The home screen launcher for every installed app. |
+| [Merge Conflict](./badge/apps/merge_conflict/) | Short two-player games, including badge-link play. |
+| [Mona Paint](./badge/apps/mona_paint/) | Tilt-aware paint program with drawing tools and undo. |
+| [Mona Pet](./badge/apps/mona_pet/) | Virtual pet with feeding, cleaning and matching games. |
+| [Monapet](./badge/apps/monapet/) | Care for your very own Mona. |
+| [Pong](./badge/apps/pong/) | Badge-link multiplayer Pong. |
+| [Quest](./badge/apps/quest/) | Universe badge quest: exchange IR beacons and collect progress. |
+| [Rogue](./badge/apps/rogue/) | Turn-based dungeon crawler. |
+| [Sense](./badge/apps/sense/) | Live temperature, humidity, pressure, light and motion readings. |
+| [Settings](./badge/apps/settings/) | Edit Wi-Fi, GitHub username, contact name and backlight settings. |
+| [Show](./badge/apps/show/) | Start the firmware's Sparkle light show. |
+| [Sketchy Sketch](./badge/apps/sketchy_sketch/) | Draw by moving a cursor with the directional controls. |
+| [Snake](./badge/apps/snake/) | A continuously moving snake game. |
+| [Snarky Sciuridae](./badge/apps/snarky_sciuridae/) | Care for your very own squirrel. |
+| [Startup](./badge/apps/startup/) | Boot animation shown before the menu. |
+| [System](./badge/apps/system/) | Time, battery status and Wi-Fi clock sync. |
+| [Tennis](./badge/apps/tennis/) | Pong-style game against a computer paddle. |
+| [Tomato](./badge/apps/tomato/) | Pomodoro timer. |
+
+### Universe 2025 apps (`badge25/apps/`)
+
+These use the 2025 Badgeware API and run on the 2025 badge or the
+[simulator](./badge25/README.md#testing-apps-with-the-simulator).
+
+| App | Summary |
+| --- | --- |
+| [badge](./badge25/apps/badge/) | GitHub profile, avatar and contribution graph (Wi-Fi). |
+| [commits](./badge25/apps/commits/) | Break GitHub-colored bricks with a paddle. |
+| [copilot-loop](./badge25/apps/copilot-loop/) | Looping Copilot animation. |
+| [crypto](./badge25/apps/crypto/) | Cryptocurrency prices (Wi-Fi). |
+| [files](./badge25/apps/files/) | Browse the filesystem and view text files. |
+| [flappy](./badge25/apps/flappy/) | Flappy-style game with Mona. |
+| [gallery](./badge25/apps/gallery/) | Browse PNG images. |
+| [gitris](./badge25/apps/gitris/) | GitHub-themed falling-block puzzle game. |
+| [hello](./badge25/apps/hello/) | Minimal "hello world" starter app. |
+| [invaders](./badge25/apps/invaders/) | Space-invaders-style shooter. |
+| [jezzball](./badge25/apps/jezzball/) | Trap bouncing balls with dividers to claim territory. |
+| [life](./badge25/apps/life/) | Conway's Game of Life with color palettes. |
+| [menu](./badge25/apps/menu/) | Launcher that auto-discovers installed apps. |
+| [monapet](./badge25/apps/monapet/) | Virtual pet Mona. |
+| [quest](./badge25/apps/quest/) | Universe 2025 IR beacon quest. |
+| [sensor_dashboard](./badge25/apps/sensor_dashboard/) | Temperature, humidity, dew point, VOC and NOx from external Qw/ST sensors. |
+| [sketch](./badge25/apps/sketch/) | Drawing app with a dial-controlled cursor. |
+| [snake](./badge25/apps/snake/) | Classic Snake with score tracking. |
+| [startup](./badge25/apps/startup/) | Boot animation. |
+| [stocks](./badge25/apps/stocks/) | Stock prices (Wi-Fi). |
+| [weather](./badge25/apps/weather/) | Current weather for your location via Open-Meteo (Wi-Fi). |
+| [wifi](./badge25/apps/wifi/) | Wi-Fi connection status. |
+| [wled](./badge25/apps/wled/) | Control WLED devices such as the Universe 2025 Octolamp (Wi-Fi). |
 
 ## Pimoroni and Badgeware resources
 
