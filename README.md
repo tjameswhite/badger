@@ -70,6 +70,7 @@ Each app folder has a `README.md` with usage and requirements.
 | [System](./badge/apps/system/) | Time, battery status and Wi-Fi clock sync. |
 | [Tennis](./badge/apps/tennis/) | Pong-style game against a computer paddle. |
 | [Tomato](./badge/apps/tomato/) | Pomodoro timer. |
+| [Weather](./badge/apps/weather/) | Current weather for your location via Open-Meteo, with wttr.in fallback (Wi-Fi). |
 
 ### Universe 2025 apps (`badge25/apps/`)
 
