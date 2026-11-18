@@ -6,7 +6,7 @@ Measure cornering, braking and acceleration forces and log your autocross runs.
 
 ## Usage
 
-Mount the badge firmly in the car at any angle, for example in a phone mount. It must not swing on a lanyard. On first launch the app calibrates in two steps:
+Mount the badge firmly in the car at any angle, for example in a phone mount. It must not swing on a lanyard. Grip it by the clear case around the screen, not by the touch-pad strip below it. Touching **BACK** (the upper round pad) resets the peaks, **SELECT** (the lower round pad) starts or stops a run, and **MENU** (the left slanted oval) recalibrates. On first launch the app calibrates in two steps:
 
 1. **Level:** stop the car and keep still for about a second while the badge measures gravity.
 2. **Forward:** drive forward gently in a straight line so the badge learns which way is forward.
