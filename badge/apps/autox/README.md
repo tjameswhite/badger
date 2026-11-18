@@ -11,7 +11,20 @@ Mount the badge firmly in the car at any angle, for example in a phone mount. It
 1. **Level:** stop the car and keep still for about a second while the badge measures gravity.
 2. **Forward:** drive forward gently in a straight line so the badge learns which way is forward.
 
-Calibration is saved, so you only repeat it after moving the badge. Press **MENU** to recalibrate.
+Calibration is saved. Press **MENU** to recalibrate after moving the badge to a different mount or position.
+
+### Staying level
+
+Mounts can sag or slip, which makes part of gravity read as braking or acceleration. AutoX re-levels itself whenever the car has been stopped for about a second on the live screen, for example at the start line. It uses the gyroscope to tell a stopped car from steady cornering. The status above the hints shows:
+
+| Status | Meaning |
+| --- | --- |
+| `LEVEL OK` (green) | Re-levelled while stopped and ready to record |
+| `STOP TO LEVEL` | Not checked yet; stop for a second |
+| `TILTED 12 DEG` (amber) | During a run, the badge has tipped since the run started; readings may be off |
+| `MOVED: PRESS MENU` (red) | The badge has moved more than 30°, so recalibrate |
+
+Calibration never changes during a recording, so each run stays consistent.
 
 On the live screen the green ball shows the force you feel, like a ball rolling in a bowl: it moves down when accelerating, up when braking, right in a left turn and left in a right turn. The rings mark 0.5, 1.0 and 1.5 g. The panel shows live lateral and longitudinal g and the peaks in each direction.
 
