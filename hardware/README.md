@@ -264,6 +264,33 @@ The input test app shows eight touch-backed logical actions:
 | Menu pad | `BUTTON_MENU` |
 | Home pad | `BUTTON_HOME` |
 
+##### Touch pad positions
+
+The eight pads are on the exposed PCB below the display window. Viewed with the
+pads below the screen (the five physical buttons then sit on the case's top and
+left edges), the layout is:
+
+```text
+            ┌─────────────────────────────┐
+            │           display           │
+            └─────────────────────────────┘
+   ┌──────────────────────────────────────────────┐
+   │      [UP]                            (BACK)  │
+   │  [LEFT]  [RIGHT]   /MENU/ /HOME/             │
+   │      [DOWN]                     (SELECT)     │
+   └──────────────────────────────────────────────┘
+     square pads in a +   slanted ovals   round pads
+```
+
+- **Left:** a directional pad of four square pads: Up, Down, Left, Right.
+- **Centre:** two small slanted ovals: **Menu**, then **Home** to its right.
+- **Right:** two round pads: **Back** at upper right and **Select** below it,
+  offset to the left.
+
+Back, Menu, and Home exist only as touch pads. Up, Down, Left, Right, and
+Select are available both as pads and as physical switches. Verified on a badge
+by touching each pad and reading `badge.touched()` and `badge.pressed()`.
+
 The source does not identify which physical `CAP1` through `CAP8` net maps to
 each logical action. Firmware orientation handling may also change the logical
 meaning of directional pads, so applications must not depend on CAP channel
