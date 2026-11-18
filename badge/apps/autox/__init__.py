@@ -85,9 +85,36 @@ app = {
     "error": None,
     "runs": [],
     "scroll": 0,
+    "still": vehicle.StillTracker(),
+    "level_state": None,   # None (not checked yet), "ok", "tilted" or "moved"
+    "tilt": 0.0,
+    "cal_dirty": False,    # re-levelled calibration not yet saved
 }
 if app["cal"] is None:
     app["mode"] = CAL_LEVEL
+
+
+def check_level(mode):
+    """Re-level while stopped in READY; warn if the badge tips during a run."""
+    cal = app["cal"]
+    up = app["still"].still_up(cal.gyro_bias)
+    if up is None:
+        return
+    tilt = vehicle.angle_deg(up, cal.up)
+    app["tilt"] = tilt
+    if tilt > vehicle.RELEVEL_MAX_DEG:
+        app["level_state"] = "moved"   # remounted or twisted: needs MENU
+        return
+    if mode == READY:
+        if tilt > 0.3:
+            app["cal"] = vehicle.relevel(cal, up)
+            app["cal_dirty"] = True
+        if app["cal"].gyro_bias is None:
+            app["cal"].gyro_bias = app["still"].gyro_mean()
+            app["cal_dirty"] = True
+        app["level_state"] = "ok"
+    else:
+        app["level_state"] = "tilted" if tilt > vehicle.TILT_WARN_DEG else "ok"
 
 
 def start_calibration():
@@ -115,7 +142,11 @@ def start_run():
     reset_live()
     app["error"] = None
     try:
-        app["run"] = app["writer"].start(app["cal"].to_list(), badge.ticks)
+        if app["cal_dirty"]:
+            saved["cal"] = app["cal"].to_list()
+            State.save("autox", saved)
+            app["cal_dirty"] = False
+        app["run"] = app["writer"].start(app["cal"].axes(), badge.ticks)
         app["mode"] = RECORDING
     except OSError as e:
         app["error"] = "can't record: %s" % e
@@ -238,9 +269,30 @@ def draw_live(value):
     screen.text(hint, PANEL_X, screen.height - (SMALL_H + 3) * 2)
     if app["mode"] == READY:
         screen.text("DOWN runs", PANEL_X, screen.height - SMALL_H - 3)
+    draw_level_status(screen.height - (SMALL_H + 3) * 3 - 4)
     if app["error"]:
         screen.pen = WARN
         screen.text(app["error"], 6, screen.height - SMALL_H - 3)
+
+
+def draw_level_status(y):
+    state = app["level_state"]
+    screen.font = SMALL
+    if state == "moved":
+        screen.pen = REC
+        text = "MOVED: PRESS MENU"
+    elif state == "tilted":
+        screen.pen = WARN
+        text = "TILTED %d DEG" % int(app["tilt"])
+    elif app["mode"] == RECORDING:
+        return
+    elif state == "ok":
+        screen.pen = BALL
+        text = "LEVEL OK"
+    else:
+        screen.pen = LABEL
+        text = "STOP TO LEVEL"
+    screen.text(text, PANEL_X, y)
 
 
 def draw_progress(fraction, y):
@@ -362,11 +414,12 @@ def update():
     dt = badge.ticks_delta
     raw = read_raw()
     a = vehicle.to_g(raw)
+    g = raw[3:6]
     mode = app["mode"]
 
     if mode == CAL_LEVEL:
-        if app["level"].add(a, dt):
-            app["fwd"] = vehicle.ForwardStep(app["level"].result)
+        if app["level"].add(a, dt, g):
+            app["fwd"] = vehicle.ForwardStep(app["level"].result, app["level"].gyro_bias)
             app["mode"] = CAL_FWD
         draw_cal_level()
         return
@@ -397,6 +450,8 @@ def update():
         return
 
     # READY / RECORDING: live g-meter
+    if app["still"].add(a, g, dt):
+        check_level(mode)
     value = app["smooth"].add(app["cal"].car_g(a), dt)
     app["peaks"].add(*value)
     trail = app["trail"]

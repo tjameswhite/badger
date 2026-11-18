@@ -108,6 +108,89 @@ class CalibrationTests(unittest.TestCase):
         self.assertAlmostEqual(a.value[0], b.value[0], places=6)
 
 
+class RelevelTests(unittest.TestCase):
+    def tipped(self, up, fwd, axis, degrees):
+        return rotate(up, axis, degrees), rotate(fwd, axis, degrees)
+
+    def test_relevel_recovers_after_tip(self):
+        up, fwd = MOUNTS["upright on dash"]
+        cal = calibrate(mounted(up, fwd))
+        left = vehicle.cross(up, fwd)
+        for name, axis in (("pitch", left), ("roll", fwd)):
+            with self.subTest(name):
+                up2, fwd2 = self.tipped(up, fwd, axis, 25)
+                read = mounted(up2, fwd2)
+                # stale calibration leaks gravity into the readings
+                self.assertGreater(max(abs(x) for x in cal.car_g(read(0, 0))), 0.3)
+                fixed = vehicle.relevel(cal, vehicle.normalize(read(0, 0)))
+                for forward_g, left_g in ((0.6, 0), (-0.9, 0), (0, 0.8), (0.3, -0.5)):
+                    lat, lon = fixed.car_g(read(forward_g, left_g))
+                    self.assertAlmostEqual(lon, forward_g, places=3)
+                    self.assertAlmostEqual(lat, left_g, places=3)
+
+    def test_calibration_list_with_gyro_bias(self):
+        cal = vehicle.Calibration((0, 0, 1), (1, 0, 0), (185.0, -646.0, -248.0))
+        again = vehicle.Calibration.from_list(cal.to_list())
+        self.assertEqual(again.gyro_bias, (185.0, -646.0, -248.0))
+        self.assertEqual(len(cal.axes()), 6)
+        self.assertIsNone(vehicle.Calibration.from_list([0, 0, 1, 1, 0, 0]).gyro_bias)
+
+
+class StillTrackerTests(unittest.TestCase):
+    BIAS = (185.0, -646.0, -248.0)  # measured on the badge at rest
+
+    def feed(self, tracker, accel, gyro, seconds=1.5, dt=23):
+        t = 0
+        i = 0
+        while t < seconds * 1000:
+            tracker.add(accel(i), gyro(i), dt)
+            t += dt
+            i += 1
+
+    def idle_vibration(self, i):
+        wobble = 0.03 * math.sin(i * 1.7)
+        return (wobble, 0.0, 1.0 - wobble)
+
+    def test_still_with_idle_vibration(self):
+        tr = vehicle.StillTracker()
+        self.feed(tr, self.idle_vibration, lambda i: self.BIAS)
+        up = tr.still_up(self.BIAS)
+        self.assertIsNotNone(up)
+        self.assertLess(vehicle.angle_deg(up, (0, 0, 1)), 2)
+
+    def test_steady_cornering_is_not_still(self):
+        # 0.2 g lateral looks almost like gravity, but the car is turning at 30 dps
+        yaw = vehicle.GYRO_COUNTS_PER_DPS * 30
+        tr = vehicle.StillTracker()
+        lean = vehicle.normalize((0.2, 0, 1.0))
+        self.feed(tr, lambda i: lean, lambda i: (self.BIAS[0], self.BIAS[1], self.BIAS[2] + yaw))
+        self.assertIsNone(tr.still_up(self.BIAS))
+
+    def test_accelerating_is_not_still(self):
+        tr = vehicle.StillTracker()
+        self.feed(tr, lambda i: (0.3, 0, 1.0), lambda i: self.BIAS)
+        self.assertIsNone(tr.still_up(self.BIAS))
+
+    def test_bumps_are_not_still(self):
+        tr = vehicle.StillTracker()
+        self.feed(tr, lambda i: (0, 0, 1.0 + (0.3 if i % 7 == 0 else 0)), lambda i: self.BIAS)
+        self.assertIsNone(tr.still_up(self.BIAS))
+
+    def test_unknown_bias_uses_gyro_steadiness(self):
+        tr = vehicle.StillTracker()
+        self.feed(tr, self.idle_vibration, lambda i: self.BIAS)
+        self.assertIsNotNone(tr.still_up(None))
+        tr = vehicle.StillTracker()
+        swing = vehicle.GYRO_COUNTS_PER_DPS * 20
+        self.feed(tr, self.idle_vibration, lambda i: (self.BIAS[0] + swing * math.sin(i / 10), self.BIAS[1], self.BIAS[2]))
+        self.assertIsNone(tr.still_up(None))
+
+    def test_needs_a_full_second(self):
+        tr = vehicle.StillTracker()
+        self.feed(tr, self.idle_vibration, lambda i: self.BIAS, seconds=0.6)
+        self.assertIsNone(tr.still_up(self.BIAS))
+
+
 class LogFormatTests(unittest.TestCase):
     def test_decode(self):
         cal = [0, 0, 1, 1, 0, 0]
